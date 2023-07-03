@@ -1,0 +1,348 @@
+﻿@model BusinessLayer.Entity.MaterialReceiptEntry
+
+@{
+    ViewBag.Title = "Raw Material Receipt Entry";
+    Layout = "~/Views/Shared/_MainDashboard.cshtml";
+
+}
+
+
+
+@using (Html.BeginForm("MaterialReceiptEntry", "Material", FormMethod.Post, new { @id = "frmMaterialReceiptEntry", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    Html.RenderPartial("_Alerts");
+
+    <div class="pd-20 card-box mb-30">
+
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2 bold">Requisition No</label>
+            <div class="col-sm-12 col-md-4">
+                :  <span id="spnREQUISITION_CODE" style="color: red;font-weight:bold;">@Model.REQUISITION_CODE</span>
+            </div>
+            <label class="col-sm-12 col-md-2">Requisition Quantity  &nbsp;</label>
+            <div class="col-sm-12 col-md-4">
+                :  <span id="spnQUANTITY">@Model.QUANTITY</span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2">Rate</label>
+            <div class="col-sm-12 col-md-4">
+                @Html.TextBoxFor(x => x.RATE, new { @class = "form-control numeric", @id = "txtRATE", @data_placeholder = "Enter Rate", @autocomplete = "off", @style = "width: 50%" })
+                <span id="spnErr_RATE" class="field-validation-error"></span>
+            </div>
+            <label class="col-sm-12 col-md-2">Unit</label>
+            <div class="col-sm-12 col-md-4">
+                @Html.DropDownListFor(x => x.Unit, Model.Unit_List, "Select Unit", new { @class = "custom-select2 form-control", @id = "ddlUnit", @data_placeholder = "Select Unit", @style = "width: 50%" })
+                <span id="spnErr_ddlUnit" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2">Amount</label>
+            <div class="col-sm-12 col-md-4">
+                : <span id="spnAMOUNT"> @Model.AMOUNT</span>
+            </div>
+
+
+            <label class="col-sm-12 col-md-2">Taxes</label>
+            <div class="col-sm-12 col-md-2">
+                <div class="input-group-append">
+                    @Html.TextBoxFor(x => x.Taxes, new { @class = "form-control numeric", @id = "txtTaxes", @data_placeholder = "Enter Tax", @autocomplete = "off", @style = "width: 50%" })
+                    <span id="spntxtTaxes" class="field-validation-error"></span>
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                @Html.TextBoxFor(x => x.txtAmount, new { @class = "form-control numeric", @id = "txtAmount", @autocomplete = "off", @style = "width: 100%" })
+            </div>
+
+
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2">Total Amount</label>
+            <div class="col-sm-12 col-md-2">
+                : <span id="spnTOTAL_AMT"> @Model.TOTAL_AMT</span>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2">PO NO:</label>
+            <div class="col-sm-12 col-md-4">
+                @Html.TextBoxFor(x => x.PO_NO, new { @class = "form-control", @id = "txtPO_NO", @data_placeholder = "Enter P.O Number", @autocomplete = "off", @style = "width: 80%" })
+                <span id="spnErr_PO_NO" class="field-validation-error"></span>
+            </div>
+
+            <label class="col-sm-12 col-md-2">Vendor Name</label>
+            <div class="col-sm-12 col-md-4">
+                @Html.DropDownListFor(x => x.VENDOR_NAME, Model.VENDOR_LIST, "Select Vendor", new { @class = "custom-select2 form-control", @id = "ddlVendor", @data_placeholder = "Select Vendor", @style = "width: 100%" })
+                <span id="spnErr_ddlVendor" class="field-validation-error"></span>
+            </div>
+        </div>
+    @*</div>
+
+    <div class="pd-20 card-box mb-30">*@
+        <div class="clearfix">
+            <div style="text-align:center">
+                <h4 class="text-blue h4">Expense Details</h4>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2">Transport Charges</label>
+            <div class="col-sm-12 col-md-4">
+                @Html.TextBoxFor(x => x.Transport_Charges, new { @class = "form-control numeric", @id = "txtTransport_Charges", @data_placeholder = "Enter Transport Charges", @autocomplete = "off", @style = "width: 100%" })
+                <span id="spnErr_txtTransport_Charges" class="field-validation-error"></span>
+            </div>
+
+            <label class="col-sm-12 col-md-2">Mamool Charges</label>
+            <div class="col-sm-12 col-md-4">
+                @Html.TextBoxFor(x => x.Mamool_Charges, new { @class = "form-control numeric", @id = "txtMamool_Charges", @data_placeholder = "Enter Mamool Charges", @autocomplete = "off", @style = "width: 100%" })
+                <span id="spnErr_txtMamool_Charges" class="field-validation-error"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2">Other Charges</label>
+            <div class="col-sm-12 col-md-4">
+                @Html.TextBoxFor(x => x.Other_Charges, new { @class = "form-control numeric", @id = "txtOther_Charges", @data_placeholder = "Enter Other Charges", @autocomplete = "off", @style = "width: 100%" })
+                <span id="spnErr_txtOther_Charges" class="field-validation-error"></span>
+            </div>
+
+            <label class="col-sm-12 col-md-2">Total Expense</label>
+            <div class="col-sm-12 col-md-4">
+                :  <span id="spnTotal_Expense">@Model.Total_Expense</span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2">Overall Cost</label>
+            <div class="col-sm-12 col-md-2">
+                : <span id="spnOverall_Cost"> @Model.Overall_Cost</span>
+            </div>
+
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2 col-form-label">Upload Copy</label>
+            <div class="col-sm-12 col-md-10">
+                @Html.TextBoxFor(x => x.UploadFile, new { @class = "form-control", @id = "txtUploadFile", @data_placeholder = "Select Upload Copy", @type = "file", data_val = false })
+                <span id="spnErr_txtUploadFile" class="field-validation-error"></span>
+
+                <a href="#" class="btn btn-sm btn-outline-secondary" id="btnSlipView"> <i class="icon-copy fa fa-eye" aria-hidden="true" style="font-size:20px;"></i> View Report</a>
+                @Html.HiddenFor(x => x.FILE_PATH, new { @id = "hdnFilePath" })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-12" style="padding-top:5px; padding-bottom:15px; padding-right:13px;text-align:center;">      
+              
+                      <input type="submit" class="btn btn-success" value="Save" name="Save" style="width:auto;" id="btnSubmit" />
+       
+                @Html.HiddenFor(x => x.REQUISITION_ID)
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bs-example-modal-lg" id="DocModal" tabindex="-1" role="dialog" aria-labelledby="DocModalLabel" aria-hidden="true" style="width:100%;padding:0px;">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">View Document</h4>
+                    <button type="button" class="close" aria-label="Close" id="btnDocPopupClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body" id="DocBody" style="padding-right: 0px; margin-right: 0px; max-height: 500px; overflow:hidden;padding:5px;">
+                    <div id="DOC1"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/assets/js/jquery-2.1.4.min.js"></script>
+<script src="~/Scripts/Custom/customValidation.js"></script>
+
+<script>
+    $(document).ready(function () {
+     
+        $('#btnSlipView').click(function () {
+
+            var FilePath = $('#hdnFilePath').val();
+            $("#DOC1").html('<iframe width="100%" style="border: 0px;" height="450" src="@Url.Action("ShowDocument", "Material", new { FilePath = "_FilePath" }) "'.replace("_FilePath", FilePath) + 'class="img-responsive" ></iframe>');
+            $("#DOC1").show();
+            $('#DocBody').slideDown('slow');
+            $('#DocModal').modal('show');
+        });
+        $('#btnDocPopupClose').click(function () {
+            $('#DocBody').slideUp('slow');
+            $('#DocModal').modal('hide');
+        });
+
+        $('#txtRATE').on('input', function () {
+            var quantity = parseInt($('#spnQUANTITY').text());
+            var rate = parseFloat($(this).val());
+            var amount = quantity * rate;
+
+            if (!isNaN(rate)) {
+                var amount = quantity * rate;
+                $('#spnAMOUNT').text(amount);
+            } else {
+                $('#spnAMOUNT').text('0.00');
+            }
+        });
+
+        $('#txtTaxes').on('input', function () {
+            var percentage = parseFloat($(this).val());
+            if (!isNaN(percentage)) {
+                var amount = parseFloat($('#spnAMOUNT').text());
+                var calculatedAmount = amount * (percentage / 100);
+                $('#txtAmount').val(calculatedAmount.toFixed(3));
+                var totalAmount = amount + calculatedAmount;
+                $('#spnTOTAL_AMT').text(totalAmount);
+            } else {
+                $('#txtAmount').val(''); // Clear the txtAmount textbox
+                $('#spnTOTAL_AMT').text('0.00');
+            }
+        });
+
+        $('#txtTransport_Charges, #txtMamool_Charges, #txtOther_Charges').on('input', function () {
+            var transportCharges = parseFloat($('#txtTransport_Charges').val()) || 0;
+            var mamoolCharges = parseFloat($('#txtMamool_Charges').val()) || 0;
+            var otherCharges = parseFloat($('#txtOther_Charges').val()) || 0;
+
+            var totalExpense = transportCharges + mamoolCharges + otherCharges;
+            $('#spnTotal_Expense').text(totalExpense);
+
+
+            var totalAmt = parseFloat($('#spnTOTAL_AMT').text());
+            var totalExpense = parseFloat($('#spnTotal_Expense').text());
+
+            var overallCost = totalAmt + totalExpense;
+            $('#spnOverall_Cost').text(overallCost);
+
+        });
+
+      
+            $("#btnSubmit").click(function (e) {
+                alert("hii");
+                //flag = validateForm();
+
+      
+                //if (flag > 0) {
+        
+                //    e.preventDefault();
+                //    return false;
+                //}
+
+            });
+        //function validateForm() {
+        //    if ($("#txtRATE").val() == "") {
+        //        $('#spnErr_RATE').text('Enter Rate').show();
+        //    }
+        //    else {
+        //        $('#spnErr_RATE').text('').hide();
+        //    }
+
+        //    if ($("#ddlUnit option:selected").val() == "") {
+        //        $('#spnErr_ddlUnit').text('Select Unit').show();
+        //    }
+        //    else {
+        //        $('#spnErr_ddlUnit').text('').hide();
+        //    }
+        //    if ($("#txtTaxes").val() == "") {
+        //        $('#spntxtTaxes').text('Enter Tax').show();
+        //    }
+        //    else {
+        //        $('#spntxtTaxes').text('').hide();
+        //    }
+        //    if ($("#txtPO_NO").val() == "") {
+        //        $('#spnErr_PO_NO').text('Enter P.O. Number').show();
+        //    }
+        //    else {
+        //        $('#spnErr_PO_NO').text('').hide();
+        //    }
+        //    if ($("#ddlVendor option:selected").val() == "") {
+        //        $('#spnErr_ddlVendor').text('Select Vendor').show();
+        //    }
+        //    else {
+        //        $('#spnErr_ddlVendor').text('').hide();
+        //    }
+        //    if ($("#txtTransport_Charges").val() == "") {
+        //        $('spnErr_txtTransport_Charges').text('Enter Transport Charges').show();
+        //    }
+        //    else {
+        //        $('spnErr_txtTransport_Charges').text('').hide();
+        //    }
+        //    if ($("#txtMamool_Charges").val() == "") {
+        //        $('spnErr_txtMamool_Charges').text('Enter Mamool Charges').show();
+        //    }
+        //    else {
+        //        $('spnErr_txtMamool_Charges').text('').hide();
+        //    }
+        //    if ($("#txtOther_Charges").val() == "") {
+        //        $('spnErr_txtOther_Charges').text('Enter Other Charges').show();
+        //        
+        //    }
+        //    else {
+        //        $('spnErr_txtOther_Charges').text('').hide();
+        //    }
+        // 
+            //if ($("#txtUploadFile").val() == "") {
+            //    $('spnErr_txtUploadFile').text('Enter Upload Copy').show();
+            //    return 1;
+            //}
+            //else {
+            //    $('spnErr_txtUploadFile').text('').hide();
+            //}
+            //return 0;
+        //}
+
+    });
+
+
+</script>
+
+<style>
+    .table thead th {
+        font-weight: 600;
+        font-size: 14px;
+        border-bottom: 0;
+        padding-left: 1rem;
+        background-color: #000000;
+        color: white;
+    }
+
+    .table td {
+        font-weight: 600;
+        font-size: 12px;
+        border-bottom: 0;
+        padding-left: 1rem;
+    }
+
+    .table td, .table th {
+        padding: 0.25rem;
+        vertical-align: top;
+        border: 1px solid #dee2e6;
+    }
+
+        /*tr:nth-child(even) {
+        background-color: #fffada;
+    }*/
+
+        .table td input {
+            height: 30px;
+        }
+
+    .table tfoot th {
+        font-weight: 600;
+        font-size: 14px;
+        border-bottom: 0;
+        padding-left: 1rem;
+        background-color: #000000;
+        color: white;
+    }
+</style>

@@ -1,0 +1,126 @@
+USE [SGX]
+GO
+
+/****** Object:  StoredProcedure [AGG].[USP_INSERT_MATERIAL_RECEIPT_ENTRY]    Script Date: 7/3/2023 11:02:31 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+
+
+/*
+CREATE BY		: ROHIT CHAURASIYA
+CREATED DATE	: 07/01/2023
+ [AGG].[USP_INSERT_MATERIAL_RECEIPT_ENTRY] 
+*/
+
+ALTER PROC [AGG].[USP_INSERT_MATERIAL_RECEIPT_ENTRY]
+@MREC_ID                    NUMERIC(18,0) OUTPUT,
+@MREC_CODE		            VARCHAR(20) OUTPUT,
+@REQUISITION_ID		    	NUMERIC(18,0) ,
+@QUANTITY		            NUMERIC(18,2),
+@RATE                       NUMERIC(18,2),
+@UNIT                       VARCHAR(10),
+@AMOUNT                     NUMERIC(18,2),
+@TAX_PER                    NUMERIC(5,2),
+@TAX_AMT                    NUMERIC(18,2),
+@TOTAL_AMT                  NUMERIC(18,2),
+@PO_NO                      VARCHAR(50),
+@VENDOR_CODE                VARCHAR(10),
+@TRANSPORT_CHARGES          NUMERIC(18,2),
+@MAMOOL_CHARGES             NUMERIC(18,2),
+@OTHER_CHARGES              NUMERIC(18,2),
+@TOTAL_EXPENSE              NUMERIC(18,2),
+@OVERALL_COST               NUMERIC(18,2),
+@IS_FILE_UPLOAD             VARCHAR(1),
+@FILE_PATH					VARCHAR(200),
+@ADDED_BY                    CHAR(7),
+@ERRORSTR					VARCHAR(200) OUTPUT
+               
+AS BEGIN	
+
+SET NOCOUNT ON;
+SET @ERRORSTR='' 
+ 
+
+DECLARE @IDTEMP INT      
+SELECT @IDTEMP = MAX(CAST(left(RIGHT(MREC_CODE,7),7) AS INT) ) FROM AGG.[Tbl_MATERIAL_RECEIPT_ENTRY]  
+SELECT @IDTEMP=CASE WHEN @IDTEMP IS NULL THEN 1  ELSE @IDTEMP + 1  END      
+
+SELECT @MREC_CODE = 'MREC' +Replicate('0',7 - len(@IDTEMP)) + cast(@IDTEMP as varchar) 
+ 	 
+  
+ 
+INSERT INTO [AGG].[Tbl_MATERIAL_RECEIPT_ENTRY]
+           ( 
+		    [MREC_CODE]
+		   ,[REQUISITION_ID]
+           ,[QUANTITY]
+		   ,[RATE]
+           ,[UNIT]
+		   ,[AMOUNT]
+		   ,[TAX_PER]
+           ,[TAX_AMT]
+		   ,[TOTAL_AMT] 
+		   ,[PO_NO]
+		   ,[VENDOR_CODE]
+		   ,[TRANSPORT_CHARGES]
+		   ,[MAMOOL_CHARGES]
+		   ,[OTHER_CHARGES]
+		   ,[TOTAL_EXPENSE]
+		   ,[OVERALL_COST]
+		   ,[IS_FILE_UPLOAD]
+		   ,[FILE_PATH]
+		   ,[ADDED_BY]
+		   ,[ADDED_ON]
+		  
+		   )
+      
+     VALUES
+           (    
+		    @MREC_CODE,
+		    @REQUISITION_ID,
+			@QUANTITY,
+			@RATE,		
+			@UNIT,		   		    		   
+			@AMOUNT, 
+			@TAX_PER,  
+			@TAX_AMT,  
+			@TOTAL_AMT, 
+			@PO_NO,            
+			@VENDOR_CODE,
+			@TRANSPORT_CHARGES,
+			@MAMOOL_CHARGES,
+			@OTHER_CHARGES,
+			@TOTAL_EXPENSE,
+			@OVERALL_COST,
+			@IS_FILE_UPLOAD,
+			@FILE_PATH,
+			@ADDED_BY,
+		    GETDATE()
+		    )
+
+ SET @MREC_ID = (SELECT SCOPE_IDENTITY())         
+
+		IF @@ERROR <> 0
+		BEGIN
+			SET @ERRORSTR = 'DATA BASE ERROR OCCUR FOR TABLE MATERIAL RECEIPT DTL !'
+			SET @MREC_ID = -1		
+			RETURN
+		END
+ 
+END
+
+
+
+
+GO
+
+
